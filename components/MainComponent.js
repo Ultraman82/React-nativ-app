@@ -1,76 +1,51 @@
 import React, { Component } from 'react';
-import Menu from './MenuComponent';
-import Home from './HomeComponent';
-import Dishdetail from './DishdetailComponent';
-import { View, Platform } from 'react-native';
-//import { Expo } from 'expo';
-import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { Text, ScrollView, View } from 'react-native';
+import { Card } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 
-const MenuNavigator = createStackNavigator(
-  {
-    Menu: { screen: Menu },
-    Dishdetail: { screen: Dishdetail },
-  },
-  {
-    initialRouteName: 'Menu',
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: '#512DA8',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        color: '#fff',
-      },
-    },
+const mapStateToProps = state => {
+    return {
+      dishes: state.dishes,
+      comments: state.comments,
+      promotions: state.promotions,
+      leaders: state.leaders
+    }
   }
-);
 
-const HomeNavigator = createStackNavigator({
-    Home: { screen: Home }
-  }, {
-    navigationOptions: ({ navigation }) => ({
-      headerStyle: {
-          backgroundColor: "#512DA8"
-      },
-      headerTitleStyle: {
-          color: "#fff"            
-      },
-      headerTintColor: "#fff"  
-    })
-});
 
-const MainNavigator = createDrawerNavigator({
-    Home: 
-      { screen: HomeNavigator,
-        navigationOptions: {
-          title: 'Home',
-          drawerLabel: 'Home'
-        }
-      },
-    Menu: 
-      { screen: MenuNavigator,
-        navigationOptions: {
-          title: 'Menu',
-          drawerLabel: 'Menu'
-        } 
-      }
-}, {
-  drawerBackgroundColor: '#D1C4E9'
-}); 
+function RenderItem(props) {
+  const item = props.item;
 
-class Main extends Component {
+  if (item != null) {
+    return (
+      <Card
+        featuredTitle={item.name}
+        featuredSubtitle={item.designation}
+        image={{ uri: baseUrl + item.image}}>
+        <Text style={{ margin: 10 }}>{item.description}</Text>
+      </Card>
+    );
+  } else {
+    return <View />;
+  }
+}
+
+class Home extends Component {  
+
+  static navigationOptions = {
+    title: 'Home',
+  };
+
   render() {
     return (
-      <View
-        style={{
-          flex: 1
-          /* paddingTop:
-            Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight, */
-        }}>
-        <MainNavigator />
-      </View>
+      <ScrollView>
+                <RenderItem item={this.props.dishes.dishes.filter((dish) => dish.featured)[0]} />
+                <RenderItem item={this.props.promotions.promotions.filter((promo) => promo.featured)[0]} />
+                <RenderItem item={this.props.leaders.leaders.filter((leader) => leader.featured)[0]} />
+      </ScrollView>
     );
   }
 }
 
-export default Main;
+export default connect(mapStateToProps)(Home);

@@ -1,48 +1,42 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-import { Card } from 'react-native-elements';
-import { DISHES } from '../shared/dishes';
+import { View, FlatList } from 'react-native';
+import { Tile } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 
-function RenderDish(props) {
+const mapStateToProps = state => {
+  return {
+    dishes: state.dishes,
+  };
+};
+class Menu extends Component {
+  static navigationOptions = {
+    title: 'Menu',
+  };
 
-    const dish = props.dish;
-    
-        if (dish != null) {
-            return(
-                <Card
-                featuredTitle={dish.name}
-                image={require('./images/uthappizza.png')}>
-                    <Text style={{margin: 10}}>
-                        {dish.description}
-                    </Text>
-                </Card>
-            );
-        }
-        else {
-            return(<View></View>);
-        }
-}
-
-class Dishdetail extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            dishes: DISHES
-        };
-    }
-
-    static navigationOptions = {
-        title: 'Dish Details'
+  render() {
+    const { navigate } = this.props.navigation;
+    const renderMenuItem = ({ item, index }) => {
+      return (
+        <Tile
+          key={index}
+          title={item.name}
+          caption={item.description}
+          featured
+          onPress={() => navigate('Dishdetail', { dishId: item.id })}
+          imageSrc={{ uri: baseUrl + item.image }}
+        />
+      );
     };
 
-    render() {
-        const dishId = this.props.navigation.getParam('dishId','');
-        return(
-            <RenderDish dish={this.state.dishes[+dishId]} />
-        );
-    }
-}   
+    return (
+      <FlatList
+        data={this.props.dishes.dishes}
+        renderItem={renderMenuItem}
+        keyExtractor={item => item.id.toString()}
+      />
+    );
+  }
+}
 
-
-export default Dishdetail;
+export default connect(mapStateToProps)(Menu);
