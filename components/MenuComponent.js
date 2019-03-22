@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
 
+console.log("Menu props : " + JSON.stringify(this.props))
+
 const mapStateToProps = state => {
   return {
-    dishes: state.dishes,
+    dishes: state.dishes    
   };
 };
 class Menu extends Component {

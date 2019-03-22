@@ -153,3 +153,48 @@ export const addFavorite = (dishId) => ({
     type: ActionTypes.ADD_FAVORITE,
     payload: dishId
 });
+
+export const addComment = (comment) => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment,    
+});
+
+export const postComment = (dishId, author, rating, comment) => (dispatch) => {
+
+    const newFeedback = {
+        dishId: dishId,
+        author: author,        
+        comment: comment,
+        rating: rating,
+        date: new Date
+    };    
+
+    console.log("newFeedback = " + JSON.stringify(newFeedback));
+    
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newFeedback),
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+        if (response.ok) {          
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            throw error;
+      })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .then(response => {alert(JSON.stringify(response.payload))})
+    .catch(error => { console.log('post comment', error.message);
+     alert('Your comment could not be posted\nError: ' + error.message);
+    });
+};
