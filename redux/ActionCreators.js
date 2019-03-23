@@ -192,9 +192,15 @@ export const postComment = (dishId, author, rating, comment) => (dispatch) => {
             throw error;
       })
     .then(response => response.json())
+    /* .then(response => dispatch(addComment(response))) */
     .then(response => dispatch(addComment(response)))
     .then(response => {alert(JSON.stringify(response.payload))})
     .catch(error => { console.log('post comment', error.message);
      alert('Your comment could not be posted\nError: ' + error.message);
     });
 };
+
+export const deleteFavorite = (dishId) => ({
+    type : ActionTypes.DELETE_FAVORITE,
+    payload : dishId
+})

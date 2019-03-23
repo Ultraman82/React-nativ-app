@@ -10,16 +10,19 @@ import { COMMENTS } from '../shared/comments';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postComment } from '../redux/ActionCreators';
+import { postFavorite } from '../redux/ActionCreators';
 
 const mapDispatchToProps = dispatch => ({
   postComment: (dishId, author, rating, comment) =>
-  dispatch(postComment(dishId, author, rating, comment))
+  dispatch(postComment(dishId, author, rating, comment)),
+  postFavorite: (dishId) => dispatch(postFavorite(dishId))
 });
 
 const mapStateToProps = state => {
   return {
     dishes: state.dishes,
     comments: state.comments,
+    favorites: state.favorites
   };
 };
 
@@ -38,8 +41,8 @@ function RenderDish(props) {
             type="font-awesome"
             color="#f50"
             onPress={() =>
-              props.favorite ? console.log('Already favorite') : props.onPress()
-            }
+              props.favorite ? console.log(props.favorites) : props.onPress()
+            }            
           />
           <Icon
             raised            
@@ -95,7 +98,7 @@ class Dishdetail extends Component {
       dishes: DISHES,
       comments: COMMENTS,
       showModal: false,
-      favorites: [],
+      favorites: [1,2],
       feedback: "",
       author: "",
       rating: 3
@@ -103,8 +106,8 @@ class Dishdetail extends Component {
   }
 
   markFavorite(dishId) {
-    this.setState({ favorites: this.state.favorites.concat(dishId) });
-  }
+    this.props.postFavorite(dishId);
+}
 
   static navigationOptions = {
     title: 'Dish Details',
@@ -135,7 +138,7 @@ class Dishdetail extends Component {
       <ScrollView>
         <RenderDish
           dish={this.props.dishes.dishes[+dishId]}
-          favorite={this.state.favorites.some(el => el === dishId)}
+          favorite={this.props.favorites.some(el => el === dishId)}
           onPress={() => this.markFavorite(dishId)}
           handleFeedback={() => this.handleFeedback(dishId)}
           toggleModal={() => this.toggleModal()}
