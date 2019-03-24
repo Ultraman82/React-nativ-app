@@ -1,74 +1,29 @@
 import React, { Component } from 'react';
 import { Text, ScrollView, View } from 'react-native';
 import { Card } from 'react-native-elements';
-import { connect } from 'react-redux';
-import { baseUrl } from '../shared/baseUrl';
-import { Loading } from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';
 
-const mapStateToProps = state => {
-  return {
-    dishes: state.dishes,
-    comments: state.comments,
-    promotions: state.promotions,
-    leaders: state.leaders,
-  };
-};
 
-function RenderItem(props) {
-  const item = props.item;
-
-  if (props.isLoading) {
-    return <Loading />;
-  } else if (props.errMess) {
-    return (
-      <View>
-        <Text>{props.erreMess}</Text>
-      </View>
-    );
-  } else {
-    if (item != null) {
-      return (
-        <Card
-          featuredTitle={item.name}
-          featuredSubtitle={item.designation}
-          image={{ uri: baseUrl + item.image }}>
-          <Text style={{ margin: 10 }}>{item.description}</Text>
-        </Card>
-      );
-    } else {
-      return <View />;
-    }
-  }
-}
-
-class Home extends Component {
+class Contact extends Component {
   static navigationOptions = {
-    title: 'Home',
+    title: 'Contact'
   };
-
-  render() {
-    return (
-      <ScrollView>
-        <RenderItem
-          item={this.props.dishes.dishes.filter(dish => dish.featured)[0]}
-          isLoading={this.props.dishes.isLoading}
-          erreMess={this.props.dishes.erreMess}
-        />
-        <RenderItem
-          item={
-            this.props.promotions.promotions.filter(promo => promo.featured)[0]
-          }
-          isLoading={this.props.promotions.isLoading}
-          erreMess={this.props.promotions.erreMess}
-        />
-        <RenderItem
-          item={this.props.leaders.leaders.filter(leader => leader.featured)[0]}
-          isLoading={this.props.leaders.isLoading}
-          erreMess={this.props.leaders.erreMess}
-        />
-      </ScrollView>
+  render () {
+      return (    
+        <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+          <Card
+              title='Contact Information'>
+            <Text style={{ margin: 10 }}>121, Clear Water Bay Road</Text>
+            <Text style={{ margin: 10 }}>Clear Water Bay, Kowloon</Text>
+            <Text style={{ margin: 10 }}>HONG KONG</Text>
+            <Text style={{ margin: 10 }}>Tel: +852 1234 5678</Text>
+            <Text style={{ margin: 10 }}>Fax: +852 8765 4321</Text>        
+            <Text style={{ margin: 10 }}>Email:confusion@food.net</Text>
+          </Card>        
+        </Animatable.View>                
+        
     );
   }
 }
 
-export default connect(mapStateToProps)(Home);
+export default Contact;
