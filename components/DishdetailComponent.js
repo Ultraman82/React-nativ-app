@@ -9,8 +9,6 @@ import { postComment } from '../redux/ActionCreators';
 import { postFavorite } from '../redux/ActionCreators';
 import * as Animatable from 'react-native-animatable';
 
-
-
 const mapDispatchToProps = dispatch => ({
   postComment: (dishId, author, rating, comment) =>
   dispatch(postComment(dishId, author, rating, comment)),
@@ -26,7 +24,7 @@ const mapStateToProps = state => {
 };
 
 function RenderDish(props) {
-  const dish = props.dish;  
+  const dish = props.dish;    
 
   handleViewRef = ref => this.view = ref;
 
@@ -35,7 +33,13 @@ function RenderDish(props) {
         return true;
     else
         return false;
-}
+  }
+  const recognizeComment = ({ moveX, moveY, dx, dy }) => {
+    if ( dx > 200 )
+        return true;
+    else
+        return false;
+  }
 
 const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: (e, gestureState) => {
@@ -59,10 +63,14 @@ const panResponder = PanResponder.create({
                 ],
                 { cancelable: false }
             );
-
+        else if(recognizeComment(gestureState))
+        {
+          props.toggleModal();                   
+        }
         return true;
     }
 })
+
 
 if (dish != null) {
     return(
@@ -147,7 +155,7 @@ class Dishdetail extends Component {
   }
 
   markFavorite(dishId) {
-    this.props.postFavorite(dishId);
+  this.props.postFavorite(dishId);
 }
 
   static navigationOptions = {

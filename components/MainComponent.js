@@ -6,6 +6,7 @@ import Contact from './ContactComponent';
 import About from './AboutusComponent';
 import Reservation from './ReservationComponent';
 import Favorites from './FavoriteComponent';
+import Login from './LoginComponent';
 import {
   View,  
   Text,
@@ -27,6 +28,7 @@ import {
   fetchPromos,
   fetchLeaders
 } from '../redux/ActionCreators';
+
 
 const mapStateToProps = state => {
   return {
@@ -190,7 +192,26 @@ const FavoritesNavigator = createStackNavigator({
       iconStyle={{ color: 'white' }} 
       onPress={ () => navigation.navigate('DrawerToggle') } />    
   })
-})
+}
+);
+
+const LoginNavigator = createStackNavigator({
+  Login: { screen: Login }
+}, {
+  navigationOptions: ({ navigation }) => ({
+    headerStyle: {
+        backgroundColor: "#512DA8"
+    },
+    headerTitleStyle: {
+        color: "#fff"            
+    },
+    headerTintColor: "#fff",
+    headerLeft: <Icon name="menu" size={24}
+      iconStyle={{ color: 'white' }} 
+      onPress={ () => navigation.navigate('DrawerToggle') } />    
+  })
+}
+)
 
 const CustomDrawerContentComponent = props => (
   <ScrollView>
@@ -215,13 +236,23 @@ const CustomDrawerContentComponent = props => (
 
 const MainNavigator = createDrawerNavigator(
   {
+    Login: {
+      screen: LoginNavigator,
+      navigationOptions: {
+        title: 'Login',
+        drawerLabel: 'Login',
+        drawerIcon: ({ trackColor, focused }) => (
+          <Icon name="sign-in" type="font-awesome" size={24} color={trackColor} />
+        ),
+      },
+    },
     Home: {
       screen: HomeNavigator,
       navigationOptions: {
         title: 'Home',
         drawerLabel: 'Home',
-        drawerIcon: ({ tintColor, focused }) => (
-          <Icon name="home" type="font-awesome" size={24} color={tintColor} />
+        drawerIcon: ({ trackColor, focused }) => (
+          <Icon name="home" type="font-awesome" size={24} color={trackColor} />
         ),
       },
     },
@@ -230,8 +261,8 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'Menu',
         drawerLabel: 'Menu',
-        drawerIcon: ({ tintColor, focused }) => (
-          <Icon name="list" type="font-awesome" size={24} color={tintColor} />
+        drawerIcon: ({ trackColor, focused }) => (
+          <Icon name="list" type="font-awesome" size={24} color={trackColor} />
         ),
       },
     },
@@ -240,12 +271,12 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'Contact',
         drawerLabel: 'Contact',
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ trackColor, focused }) => (
           <Icon
             name="address-card"
             type="font-awesome"
             size={22}
-            color={tintColor}
+            color={trackColor}
           />
         ),
       },
@@ -255,12 +286,12 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'About',
         drawerLabel: 'About Us',
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ trackColor, focused }) => (
           <Icon
             name="info-circle"
             type="font-awesome"
             size={24}
-            color={tintColor}
+            color={trackColor}
           />
         ),
       },
@@ -270,12 +301,12 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'Reserve Table',
         drawerLabel: 'Reserve Table',
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ trackColor, focused }) => (
           <Icon
             name="cutlery"
             type="font-awesome"
             size={24}
-            iconStyle={{ color: tintColor }}
+            iconStyle={{ color: trackColor }}
           />
         ),
       },
@@ -285,18 +316,19 @@ const MainNavigator = createDrawerNavigator(
       navigationOptions: {
         title: 'My Favorites',
         drawerLabel: 'My Favorites',
-        drawerIcon: ({ tintColor, focused }) => (
+        drawerIcon: ({ trackColor, focused }) => (
           <Icon
             name='heart'
             type='font-awesome'            
             size={24}
-            iconStyle={{ color: tintColor }}
+            iconStyle={{ color: trackColor }}
           />
         ),
       }
     }
   },  
   {
+    initialRouteName: 'Home',
     drawerBackgroundColor: '#D1C4E9',
     contentComponent: CustomDrawerContentComponent,
   }
