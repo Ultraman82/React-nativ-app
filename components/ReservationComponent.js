@@ -11,7 +11,7 @@ import {
 import { Card } from 'react-native-elements';
 import DatePicker from 'react-native-datepicker';
 import * as Animatable from 'react-native-animatable';
-import { Permissions, Notifications } from 'expo';
+import { Permissions, Notifications, Calendar } from 'expo';
 
 class Reservation extends Component {
   constructor(props) {
@@ -36,6 +36,7 @@ class Reservation extends Component {
       [
       {text: 'Cancel', onPress: () => {console.log('Cancel Pressed');this.resetForm()}, style: 'cancel'},
       {text: 'OK', onPress: () => {
+        this.addReservationToCalendar(this.state.date);
         this.presentLocalNotification(this.state.date);
         this.resetForm();}
       }
@@ -43,6 +44,30 @@ class Reservation extends Component {
       { cancelable: false }
     );        
   }
+
+async obtainCalendarPermission(){
+  let permission = await Permissions.askAsync(Permissions.CALENDAR);
+  return permission
+}
+
+async addReservationToCalendar(date) {    
+    if (await this.obtainCalendarPermission()) {
+        console.log('permission granted succesfully');
+        const flag = Calendar.createEventAsync(Calendar.DEFAULT, {
+            title: 'Con Fusion Table Reservation',
+            startDate: new Date(date),
+            endDate: new Date(Date.parse(date) + 2 * 60 * 60 * 1000),
+            timeZone: 'Asia/Hong_Kong',
+            location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong'
+        }).then(event => {
+            console.log('success', event);
+        }).catch(error => {
+            console.log('failure', error);
+        });
+        console.log('Calender Event Id - ' + flag)
+    }
+}
+ 
 
   resetForm() {
     this.setState({
