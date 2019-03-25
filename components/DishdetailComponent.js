@@ -95,7 +95,6 @@ if (dish != null) {
             name={props.favorite ? 'heart' : 'heart-o'}
             type="font-awesome"
             color="#f50"
-            
             onPress={() =>
               props.favorite ? console.log("Already favorite") : props.onPress()
             }            
@@ -106,7 +105,6 @@ if (dish != null) {
             name={'pencil'}
             type="font-awesome"
             color="#512DA8"
-            
             onPress={() => props.toggleModal()}
           />
           <Icon
@@ -115,7 +113,6 @@ if (dish != null) {
             name='share'
             type="font-awesome"
             color="#51D2AA"
-            
             onPress={() => shareDish(dish.name, dish.description, baseUrl + dish.image)}
           />
         </View>
